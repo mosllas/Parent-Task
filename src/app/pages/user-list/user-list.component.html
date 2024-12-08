@@ -1,0 +1,357 @@
+<div class="pb-5">
+  <div class="first-part">
+    <div class="container pt-3">
+      <span class="sp">Home / Dashboard</span>
+
+      <div class="header pt-3">
+        <h4>User List</h4>
+        <button class="btn" data-bs-toggle="modal" data-bs-target="#AddModal">
+          + new User
+        </button>
+      </div>
+    </div>
+
+    <div class="container mt-5 d-flex pb-5">
+      <div
+        class="users-div"
+        [ngClass]="{ ' users-div-CW': selectedRowindex > -1 }"
+      >
+        <div class="panel panel-default" style="padding: 0; margin-left: 11px">
+          <div class="panel-body" *ngIf="users?.length > 0">
+            <div
+              class="table-content col-md-12"
+              style="overflow-x: auto; padding-right: 0px"
+            >
+              <table class="table table-hover">
+                <thead class="thead-dark">
+                  <tr>
+                    <th>{{ "User" }}</th>
+                    <th>{{ "Actions" }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="let item of paginatedusers; let i = index"
+                  >
+                    <tr class="trHeight" (click)="selectedRow(i, item)">
+                      <td
+                        class="tdinnerHeight"
+                        [ngClass]="{ active: i == selectedRowindex }"
+                      >
+                        <img
+                          src="{{ item?.avatar }}"
+                          class="img-placeholder"
+                        />{{ item?.first_name }}
+                        {{ item?.last_name }}
+                      </td>
+                      <td [ngClass]="{ active: i == selectedRowindex }">
+                        <div class="actions">
+                          <img
+                            src="assets/images/users/edit.png"
+                            width="35"
+                            class="pt-3"
+                            style="margin-right: 10px; cursor: pointer"
+                            data-bs-toggle="modal"
+                            data-bs-target="#EditModal"
+                            (click)="onEdit(item)"
+                            *ngIf="i != selectedRowindex"
+                          />
+                          <img
+                            src="assets/images/users/delete.png"
+                            width="34"
+                            class="pt-3"
+                            style="margin-right: 20px; cursor: pointer"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            (click)="onDelete(item)"
+                            *ngIf="i != selectedRowindex"
+                          />
+                          <img
+                            src="assets/images/users/next.png"
+                            width="34"
+                            class="pt-3"
+                            style="margin-right: 10px; cursor: pointer"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+
+              <!-- Bootstrap Pagination -->
+              <ul class="pagination">
+                <li
+                  class="page-item"
+                  [ngClass]="{ disabled: isPreviousDisabled() }"
+                >
+                  <a
+                    class="page-link"
+                    (click)="onPageChange(currentPage - 1)"
+                    aria-label="Previous"
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li
+                  *ngFor="let page of [].constructor(totlPages); let i = index"
+                  class="page-item"
+                  [ngClass]="{ active: i + 1 === currentPage }"
+                >
+                  <a class="page-link" (click)="onPageChange(i + 1)">{{
+                    i + 1
+                  }}</a>
+                </li>
+                <li
+                  class="page-item"
+                  [ngClass]="{ disabled: isNextDisabled() }"
+                >
+                  <a
+                    class="page-link"
+                    (click)="onPageChange(currentPage + 1)"
+                    aria-label="Next"
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="side-details" *ngIf="selectedRowindex > -1">
+        <div class="viewBody">
+          <img
+            src="{{ selectedUserToView?.avatar }}"
+            style="border-radius: 50%"
+          />
+          <h5 class="pt-3 pb-5">
+            {{ selectedUserToView?.first_name }}
+            {{ selectedUserToView?.last_name }}
+          </h5>
+       
+          <div class="d-flex">
+            <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#EditModal"
+            (click)="onEdit(selectedUserToView)"
+          >
+            Edit
+          </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              (click)="onDelete(selectedUserToView)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body modal-body-centerd">
+        <span style="color: gray">Are you want to delete</span>
+        <p>{{ selectedUser?.first_name }} {{ selectedUser?.last_name }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="DeleteUser()"
+          data-bs-dismiss="modal"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="EditModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body-centerd">
+        <img
+          src="{{ selectedUserForEdit?.avatar }}"
+          class="Edit-img-placeholder"
+        />
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="EditForm">
+          <div>
+            <p class="input-Title">Username</p>
+            <input
+              id="userName"
+              type="text"
+              formControlName="userName"
+              placeholder="Enter username"
+              class="input-feild"
+            />
+            <div
+              *ngIf="
+                newEditFromControl['userName'].touched &&
+                newEditFromControl['userName'].invalid
+              "
+            >
+              <small
+                *ngIf="newEditFromControl['userName'].errors?.['required']"
+                style="color: red"
+              >
+                Username is required.
+              </small>
+            </div>
+          </div>
+
+          <div>
+            <p class="input-Title">jobTitle</p>
+
+            <input
+              id="jobTitle"
+              type="text"
+              formControlName="jobTitle"
+              placeholder="Enter jobTitle"
+              class="input-feild"
+            />
+            <div
+              *ngIf="
+                newEditFromControl['jobTitle'].touched &&
+                newEditFromControl['jobTitle'].invalid
+              "
+            >
+              <small
+                *ngIf="newEditFromControl['jobTitle'].errors?.['required']"
+                style="color: red"
+              >
+                jobTitle is required.
+              </small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="EditUserDetails()"
+          data-bs-dismiss="modal"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="AddModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body-centerd">
+        <img
+          src="assets/images/users/Defulat.png"
+          class="Edit-img-placeholder"
+        />
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="EditForm">
+          <div>
+            <p class="input-Title">Username</p>
+            <input
+              id="userName"
+              type="text"
+              formControlName="userName"
+              placeholder="Enter username"
+              class="input-feild"
+            />
+            <div
+              *ngIf="
+                newEditFromControl['userName'].touched &&
+                newEditFromControl['userName'].invalid
+              "
+            >
+              <small
+                *ngIf="newEditFromControl['userName'].errors?.['required']"
+                style="color: red"
+              >
+                Username is required.
+              </small>
+            </div>
+          </div>
+
+          <div>
+            <p class="input-Title">jobTitle</p>
+
+            <input
+              id="jobTitle"
+              type="text"
+              formControlName="jobTitle"
+              placeholder="Enter jobTitle"
+              class="input-feild"
+            />
+            <div
+              *ngIf="
+                newEditFromControl['jobTitle'].touched &&
+                newEditFromControl['jobTitle'].invalid
+              "
+            >
+              <small
+                *ngIf="newEditFromControl['jobTitle'].errors?.['required']"
+                style="color: red"
+              >
+                jobTitle is required.
+              </small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="AddUserDetails()"
+          data-bs-dismiss="modal"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

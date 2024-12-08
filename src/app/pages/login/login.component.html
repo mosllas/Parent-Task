@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="parent row">
+    <div class="col-6" style="padding: 0">
+      <img
+        src="assets/images/login/imag.png"
+        style="border-radius: 10px"
+        alt="Logo"
+      />
+    </div>
+
+    <div class="col-6 login-details">
+      <div class="row w-100">
+        <div class="form">
+          <h5>Welcome Back!</h5>
+          <p>
+            Please login to access <span class="brand">spaces</span> dashboard
+          </p>
+
+          <form [formGroup]="loginForm">
+            <div>
+              <p class="input-Title">Username</p>
+              <input
+                id="userName"
+                type="text"
+                formControlName="userName"
+                placeholder="Enter username"
+                class="input-feild"
+              />
+              <div
+                *ngIf="
+                  newloginFromControl['userName'].touched &&
+                  newloginFromControl['userName'].invalid
+                "
+              >
+                <small
+                  *ngIf="newloginFromControl['userName'].errors?.['required']"
+                  style="color: red"
+                >
+                  Username is required.
+                </small>
+              </div>
+            </div>
+
+            <div>
+              <p class="input-Title">Password</p>
+
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                placeholder="Enter password"
+                class="input-feild"
+              />
+              <div
+                *ngIf="
+                  newloginFromControl['password'].touched &&
+                  newloginFromControl['password'].invalid
+                "
+              >
+                <small
+                  *ngIf="newloginFromControl['password'].errors?.['required']"
+                  style="color: red"
+                >
+                  Password is required.
+                </small>
+              </div>
+            </div>
+
+            <div class="submit">
+              <span class="brand"> Forget Password ?</span>
+              <button class="btn" (click)="login()" [disabled]="!loginForm.valid">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

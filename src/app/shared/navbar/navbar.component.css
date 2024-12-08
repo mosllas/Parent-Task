@@ -1,0 +1,22 @@
+.navbar-brand {
+  color: #8e44ad;
+}
+
+.btn {
+  background-color: #8e44ad;
+  border-radius: 15px;
+  color: white;
+  margin-left: 10%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+li {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.navbar{
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+    background-color: white !important;
+}

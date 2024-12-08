@@ -1,0 +1,19 @@
+.closeBtn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 452px;
+  }
+  
+  .closeText {
+    color: #ffffff;
+    font-size: 18px;
+    font-family: 'Vodafone Rg';
+  }
+  
+  .closeIcon {
+    color: #ffffff;
+    text-align: right;
+    vertical-align: middle;
+  }
